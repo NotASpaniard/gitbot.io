@@ -1,26 +1,222 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ── Bảng màu: mỗi theme là một tập CSS custom properties ─────────────── */
+
+:root,
+[data-theme="matrix"] {
+  --term-bg: #030806;
+  --term-panel: #07110a;
+  --term-fg: #b9f7cd;
+  --term-dim: #4a8c62;
+  --term-accent: #39ff8b;
+  --term-accent-2: #7cf9c0;
+  --term-error: #ff5f56;
+  --term-border: #12351f;
+}
+
+[data-theme="dracula"] {
+  --term-bg: #16171e;
+  --term-panel: #21222c;
+  --term-fg: #f8f8f2;
+  --term-dim: #6272a4;
+  --term-accent: #bd93f9;
+  --term-accent-2: #8be9fd;
+  --term-error: #ff5555;
+  --term-border: #343746;
+}
+
+[data-theme="nord"] {
+  --term-bg: #262b35;
+  --term-panel: #2e3440;
+  --term-fg: #eceff4;
+  --term-dim: #7b88a1;
+  --term-accent: #88c0d0;
+  --term-accent-2: #a3be8c;
+  --term-error: #bf616a;
+  --term-border: #434c5e;
+}
+
+[data-theme="amber"] {
+  --term-bg: #100b02;
+  --term-panel: #1b1305;
+  --term-fg: #ffc766;
+  --term-dim: #a3752a;
+  --term-accent: #ffb000;
+  --term-accent-2: #ffd899;
+  --term-error: #ff6b3d;
+  --term-border: #3a2a08;
+}
+
+[data-theme="synthwave"] {
+  --term-bg: #120825;
+  --term-panel: #1d0f3a;
+  --term-fg: #f0e7ff;
+  --term-dim: #8b6bbd;
+  --term-accent: #ff2e97;
+  --term-accent-2: #00e5ff;
+  --term-error: #ff5f6d;
+  --term-border: #3a1f6b;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-term-bg: var(--term-bg);
+  --color-term-panel: var(--term-panel);
+  --color-term-fg: var(--term-fg);
+  --color-term-dim: var(--term-dim);
+  --color-term-accent: var(--term-accent);
+  --color-term-accent2: var(--term-accent-2);
+  --color-term-error: var(--term-error);
+  --color-term-border: var(--term-border);
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, "SFMono-Regular",
+    "Cascadia Code", Consolas, monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  color-scheme: dark;
+  scrollbar-color: var(--term-border) transparent;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--term-bg);
+  color: var(--term-fg);
+  font-family: var(--font-mono);
+  /* Vệt sáng nhẹ ở giữa màn hình, gợi cảm giác màn CRT */
+  background-image: radial-gradient(
+    ellipse 80% 60% at 50% 0%,
+    color-mix(in srgb, var(--term-accent) 7%, transparent),
+    transparent 70%
+  );
+  background-attachment: fixed;
+}
+
+::selection {
+  background-color: color-mix(in srgb, var(--term-accent) 35%, transparent);
+  color: var(--term-fg);
+}
+
+/* Thanh cuộn mảnh cho khung terminal */
+.term-scroll::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.term-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.term-scroll::-webkit-scrollbar-thumb {
+  background: var(--term-border);
+  border-radius: 999px;
+}
+.term-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--term-dim);
+}
+
+/* ── Hiệu ứng ─────────────────────────────────────────────────────────── */
+
+/* Lớp scanline phủ toàn màn, không chặn tương tác */
+.scanlines::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 2px,
+    rgba(0, 0, 0, 0.28) 3px,
+    rgba(0, 0, 0, 0.28) 4px
+  );
+  opacity: 0.35;
+  mix-blend-mode: multiply;
+}
+
+/* Con trỏ khối cho ô nhập lệnh — trình duyệt nào chưa hỗ trợ thì bỏ qua. */
+#terminal-input {
+  caret-shape: block;
+}
+
+.text-glow {
+  text-shadow: 0 0 6px color-mix(in srgb, currentColor 45%, transparent);
+}
+
+@keyframes term-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.reveal {
+  animation: term-reveal 0.16s ease-out both;
+}
+
+@keyframes term-blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.cursor-blink {
+  animation: term-blink 1.05s step-end infinite;
+}
+
+@keyframes term-shake {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  20% {
+    transform: translate(-3px, 2px);
+  }
+  40% {
+    transform: translate(3px, -2px);
+  }
+  60% {
+    transform: translate(-2px, -3px);
+  }
+  80% {
+    transform: translate(2px, 3px);
+  }
+}
+
+.shake {
+  animation: term-shake 0.4s ease-in-out 2;
+}
+
+@keyframes term-rain {
+  from {
+    transform: translateY(-110%);
+  }
+  to {
+    transform: translateY(110vh);
+  }
+}
+
+.rain-column {
+  animation: term-rain linear infinite;
+}
+
+/* ── Tôn trọng prefers-reduced-motion ─────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  .scanlines::after {
+    display: none;
+  }
 }

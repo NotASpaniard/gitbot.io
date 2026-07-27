@@ -32,6 +32,8 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+# ...trừ file mẫu: nó chỉ ghi tên biến, không chứa khoá bí mật nào
+!.env.example
 
 # vercel
 .vercel
