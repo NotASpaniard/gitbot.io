@@ -21,7 +21,6 @@ import {
   publicCommandNames,
 } from "@/lib/commands";
 import { useClientValue } from "@/lib/browser-hooks";
-import type { ProjectSource } from "@/lib/github";
 import { closestMatch, commonPrefix } from "@/lib/suggest";
 import type { EffectName, HistoryEntry, TerminalApi } from "@/lib/terminal-types";
 import {
@@ -77,13 +76,7 @@ function validateStep(step: ContactStep, value: string): string | null {
 const readStoredTheme = () => window.localStorage.getItem(THEME_STORAGE_KEY);
 const readBootFlag = () => window.sessionStorage.getItem(BOOT_FLAG) !== null;
 
-export function Terminal({
-  projects,
-  projectSource,
-}: {
-  projects: Project[];
-  projectSource: ProjectSource;
-}) {
+export function Terminal({ projects }: { projects: Project[] }) {
   const [entries, setEntries] = useState<HistoryEntry[]>([]);
   const [input, setInput] = useState("");
   const [commandHistory, setCommandHistory] = useState<string[]>([]);
@@ -289,13 +282,11 @@ export function Terminal({
       setTheme,
       commandHistory,
       projects,
-      projectSource,
       startContact,
       runEffect,
     }),
     [
       commandHistory,
-      projectSource,
       projects,
       pushOutput,
       runEffect,

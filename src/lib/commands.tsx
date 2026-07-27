@@ -15,18 +15,10 @@ import { SkillBars } from "@/components/output/SkillBars";
 import { SocialGrid } from "@/components/output/SocialGrid";
 import { Typewriter } from "@/components/Typewriter";
 import { profile } from "@/data/profile";
-import type { ProjectSource } from "./github";
 import type { Command } from "./terminal-types";
 import { isThemeName, THEME_NAMES, themes } from "./themes";
 
 const { identity, about, contact } = profile;
-
-/** Cho người xem biết danh sách dự án lấy từ đâu ra. */
-const SOURCE_NOTE: Record<ProjectSource, string> = {
-  pinned: `Lấy trực tiếp từ các repo đã ghim của github.com/${profile.github.login}.`,
-  "top-starred": `Lấy tự động từ các repo nhiều sao nhất của github.com/${profile.github.login}.`,
-  manual: "Danh sách khai báo tay — chưa lấy được dữ liệu từ GitHub.",
-};
 
 /** Bảng `help` sinh trực tiếp từ danh sách lệnh nên không bao giờ lệch. */
 function HelpTable() {
@@ -110,20 +102,7 @@ export const commands: Command[] = [
     description: "Dự án đã làm, lọc được theo tên hoặc công nghệ",
     run: (args, api) => {
       const query = args.join(" ").trim().toLowerCase();
-
-      if (!query) {
-        // Danh sách rỗng đã tự nói lý do rồi, khỏi lặp thêm dòng nguồn.
-        if (!api.projects.length) return <ProjectList items={[]} />;
-
-        return (
-          <>
-            <ProjectList items={api.projects} />
-            <p className="pb-1">
-              <Dim>{SOURCE_NOTE[api.projectSource]}</Dim>
-            </p>
-          </>
-        );
-      }
+      if (!query) return <ProjectList items={api.projects} />;
 
       const matched = api.projects.filter(
         (project) =>

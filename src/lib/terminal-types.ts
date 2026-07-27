@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
 import type { Project } from "@/data/profile";
-import type { ProjectSource } from "./github";
 import type { ThemeName } from "./themes";
 
 export type EffectName = "matrix" | "crash";
@@ -16,8 +15,6 @@ export type TerminalApi = {
   commandHistory: string[];
   /** Dự án đã giải quyết xong nguồn (GitHub hoặc danh sách dự phòng). */
   projects: Project[];
-  /** Dữ liệu `projects` cuối cùng lấy từ đâu — hiện dưới danh sách dự án. */
-  projectSource: ProjectSource;
   /** Chuyển terminal sang chế độ hỏi-đáp của form liên hệ. */
   startContact: () => void;
   runEffect: (name: EffectName) => void;

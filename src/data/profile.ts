@@ -109,17 +109,6 @@ export const profile = {
     },
   ],
 
-  /**
-   * Dự án giờ lấy thẳng từ GitHub (xem `github` bên trên) nên mảng này để rỗng.
-   *
-   * Nó vẫn là lưới an toàn cuối cùng: nếu GitHub API hỏng hoặc bị giới hạn
-   * lượt gọi, trang sẽ hiển thị đúng những gì khai ở đây. Rỗng thì phần
-   * `projects` hiện một dòng kèm link sang trang GitHub thay vì bỏ trống —
-   * vẫn tử tế hơn là bịa dữ liệu giả.
-   *
-   * Muốn ghim tay vài dự án không nằm trên GitHub thì thêm vào đây, nhưng
-   * nhớ là chỉ hiện khi GitHub không phản hồi.
-   */
   projects: [] satisfies Project[],
 
   skills: [

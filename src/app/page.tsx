@@ -7,7 +7,7 @@ const { identity, about } = profile;
 export default async function Home() {
   // Chạy phía máy chủ nên token GitHub không bao giờ lộ ra trình duyệt,
   // và kết quả được cache 1 tiếng (xem REVALIDATE_SECONDS trong lib/github.ts).
-  const { projects, source } = await getProjects();
+  const { projects } = await getProjects();
 
   return (
     <>
@@ -36,7 +36,7 @@ export default async function Home() {
         </p>
       </div>
 
-      <AppShell projects={projects} projectSource={source} />
+      <AppShell projects={projects} />
     </>
   );
 }
