@@ -162,13 +162,13 @@ export const profile = {
     {
       label: "Discord",
       username: "midnightdepressio",
-      url: "https://x.com/username",
+      url: "326514371876356097",
       icon: "discord",
     },
     {
       label: "Facebook",
       username: "Coldbrew Mơ",
-      url: "326514371876356097",
+      url: "https://www.facebook.com/coldbrew909",
       icon: "facebook",
     },
     {
@@ -226,7 +226,12 @@ export const profile = {
   },
 
   seo: {
-    siteUrl: "https://gitbot.io",
+    /**
+     * Tên miền thật của trang. Dùng cho metadataBase và thẻ Open Graph, tức là
+     * thứ Facebook/Discord đọc khi ai đó dán link. Mua tên miền riêng thì đổi
+     * dòng này, không phải sửa chỗ nào khác.
+     */
+    siteUrl: "https://gitbot-io.vercel.app",
     keywords: [
       "portfolio",
       "developer",
